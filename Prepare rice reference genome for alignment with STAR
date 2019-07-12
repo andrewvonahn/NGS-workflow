@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+#SBATCH --nodes=1
+#SBATCH --tasks-per-node=1
+#SBATCH --cpus-per-task=1
+#SBATCH --time=4:00:00
+#SBATCH --mem=64GB
+#SBATCH --job-name=q1.1
+
+curl -O http://rice.plantbiology.msu.edu/pub/data/Eukaryotic_Projects/o_sativa/annotation_dbs/pseudomolecules/version_7.0/all.dir/all.con
+
+curl -O http://rice.plantbiology.msu.edu/pub/data/Eukaryotic_Projects/o_sativa/annotation_dbs/pseudomolecules/version_7.0/all.dir/all.gff3
