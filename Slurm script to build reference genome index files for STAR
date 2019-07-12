@@ -1,0 +1,22 @@
+######STAR requires that the reference genome fasta and annotation indexes be created with a STAR-specific tool (--runMode genomeGenerate)
+
+
+#!/bin/bash
+#
+#SBATCH --nodes=1
+#SBATCH --tasks-per-node=1
+#SBATCH --cpus-per-task=8
+#SBATCH --time=48:00:00
+#SBATCH --mem=42GB
+#SBATCH --job-name=q1.3
+
+module load star/intel/2.5.3a
+
+STAR --runMode genomeGenerate \
+--genomeDir /scratch/ava278/hw10/reference \
+--genomeFastaFiles /scratch/ava278/hw10/reference/all.con \
+--runThreadN 8 \
+--sjdbGTFfile /scratch/ava278/hw10/reference/all.gff3 \
+--sjdbGTFtagExonParentTranscript Parent \
+--sjdbGTFfeatureExon exon \
+--sjdbOverhang 50
