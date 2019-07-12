@@ -1,0 +1,43 @@
+#### align RNA-seq reads for rice to the reference genome
+
+#!/bin/bash
+#
+#SBATCH --nodes=1
+#SBATCH --tasks-per-node=1
+#SBATCH --cpus-per-task=8
+#SBATCH --time=48:00:00
+#SBATCH --mem=42GB
+#SBATCH --job-name=q2.1
+#SBATCH --array=1-8
+
+module load star/intel/2.5.3a
+module load samtools/intel/1.6
+
+echo The array index is: "${SLURM_ARRAY_TASK_ID}"
+
+table=table.txt
+line="$(head -n ${SLURM_ARRAY_TASK_ID} "${table}" | tail -n 1)"
+sample="$(printf "%s" "${line}" | cut -f1)"
+fq1="$(printf "%s" "${line}" | cut -f2)"
+fq2="$(printf "%s" "${line}" | cut -f3)"
+pathtofqs=/scratch/courses/BI7653/hw10.2018
+
+echo line: "${line}"
+echo sample: "${sample}"
+echo fq1: "${fq1}"
+echo fq2: "${fq2}"
+echo forward: "${pathtofqs}/${fq1}"
+echo reverse: "${pathtofqs}/${fq2}"
+
+mkdir "${sample}"
+cd "${sample}"
+
+STAR --genomeDir /scratch/ava278/hw10/reference \
+--runThreadN 8 \
+--readFilesIn "${pathtofqs}"/"${fq1}","${pathtofqs}"/"${fq2}" \
+--outSAMtype BAM SortedByCoordinate \
+--outFileNamePrefix "${sample}" \
+--limitBAMsortRAM 20000000000 \
+--outTmpDir "${SLURM_JOBTMP}"/"${SLURM_ARRAY_TASK_ID}"
+
+samtools index "${sample}"Aligned.sortedByCoord.out.bam
