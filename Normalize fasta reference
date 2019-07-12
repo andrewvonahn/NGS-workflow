@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+#SBATCH --nodes=1
+#SBATCH --tasks-per-node=1
+#SBATCH --cpus-per-task=1
+#SBATCH --time=4:00:00
+#SBATCH --mem=64GB
+#SBATCH --job-name=q2.1
+
+module load picard/2.8.2
+
+java -jar "${PICARD_JAR}" NormalizeFasta TRUNCATE_SEQUENCE_NAMES_AT_WHITESPACE=true I=Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa O=Homo_sapiens.GRCh38.dna_sm.primary_assembly.normalized.fa
