@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+#SBATCH --nodes=1
+#SBATCH --tasks-per-node=1
+#SBATCH --cpus-per-task=1
+#SBATCH --time=48:00:00
+#SBATCH --mem=42GB
+#SBATCH --job-name=q1.1
+
+module load r/intel/3.4.2
+
+Rscript q1.2.R
