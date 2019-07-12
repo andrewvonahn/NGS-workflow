@@ -1,0 +1,44 @@
+#!/bin/bash
+
+#
+
+#SBATCH --nodes=1
+#SBATCH --tasks-per-node=1
+#SBATCH --cpus-per-task=1
+#SBATCH --time=4:00:00
+#SBATCH --mem=64GB
+#SBATCH --job-name=q4.2
+#SBATCH --array=1-22
+
+echo $(date)
+
+module load trimmomatic/0.36
+
+echo "Adapter trimming of fastq files (Trimmomatic)"
+echo The array index is: "${SLURM_ARRAY_TASK_ID}"
+
+table=/scratch/courses/BI7653/hw3.2018/week3_fastqs.txt
+Fpath=/scratch/courses/BI7653/hw3.2018/
+
+less "$table"
+line=$(head -n ${SLURM_ARRAY_TASK_ID} ${table} | tail -n 1)
+Sample=$(printf "${line}" | cut -f1)
+fq1=$(printf "${line}" | cut -f2)
+fq2=$(printf "${line}" | cut -f3)
+
+echo Array index line:
+head -n ${SLURM_ARRAY_TASK_ID} week3_fastqs.txt | tail -n 1
+
+
+
+echo Slurm job checks:
+echo line: "${line}"
+echo Sample: "${Sample}"
+echo fq1: "${fq1}"
+echo fq2: "${fq2}"
+echo Forward: "${Fpath}""${fq1}"
+echo Reverse: "${Fpath}""${fq2}"
+
+java -jar "${TRIMMOMATIC_JAR}" PE -phred33 "${Fpath}""${fq1}" "${Fpath}""${fq2}" lane1_forward_paired."${Sample}".fq.gz lane1_forward_unpaired."${Sample}".fq.gz lane1_reverse_paired."${Sample}".fq.gz lane1_reverse_unpaired."${Sample}".fq.gz ILLUMINACLIP:/scratch/courses/BI7653/hw3.2018/concatenated_adapters.fa:2:30:10 MINLEN:75
+
+echo $(date)
