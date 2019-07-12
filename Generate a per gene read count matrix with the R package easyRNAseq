@@ -1,0 +1,22 @@
+### use the Bioconductor package easyRNASeq to generate read counts which will output to a file
+
+library(easyRNASeq)
+
+annoParam <- AnnotParam(datasource="/scratch/ava278/hw11/all.gff3",type="gff3")
+
+bamparam <- BamParam(paired=TRUE,stranded=FALSE)
+
+Rnaseqparam <- RnaSeqParam(annotParam=annoParam,bamParam=bamparam,precision="read",countBy="gene")
+
+bamfilelist <- BamFileList(c("/scratch/ava278/hw11/SRR2931077Aligned.sortedByCoord.out.bam",
+"/scratch/ava278/hw11/SRR2931280Aligned.sortedByCoord.out.bam",
+"/scratch/ava278/hw11/SRR2931042Aligned.sortedByCoord.out.bam",
+"/scratch/ava278/hw11/SRR2931078Aligned.sortedByCoord.out.bam",
+"/scratch/ava278/hw11/SRR2931315Aligned.sortedByCoord.out.bam",
+"/scratch/ava278/hw11/SRR2931043Aligned.sortedByCoord.out.bam",
+"/scratch/ava278/hw11/SRR2931279Aligned.sortedByCoord.out.bam",
+"/scratch/ava278/hw11/SRR2931316Aligned.sortedByCoord.out.bam"))
+
+simpleout <- simpleRNASeq(bamFiles=bamfilelist,param=Rnaseqparam,nnodes=1,verbose=TRUE)
+
+write.table(assay(simpleout),file="readcounts.txt",row.names=T,sep="\t",quote=F)
