@@ -1,0 +1,54 @@
+#!/bin/bash
+#
+#SBATCH --nodes=1
+#SBATCH --tasks-per-node=1
+#SBATCH --cpus-per-task=1
+#SBATCH --time=4:00:00
+#SBATCH --mem=64GB
+#SBATCH --job-name=q3.1
+
+module load samtools/intel/1.3.1
+
+for file in $(ls *fa)
+do
+        samtools faidx "$file"
+done
+
+#!/bin/bash
+#
+#SBATCH --nodes=1
+#SBATCH --tasks-per-node=1
+#SBATCH --cpus-per-task=1
+#SBATCH --time=4:00:00
+#SBATCH --mem=64GB
+#SBATCH --job-name=q3.2
+
+module load bwa/intel/0.7.15
+
+for file in $(ls *fa)
+do
+        bwa index -a bwtsw "$file"
+done
+
+#!/bin/bash
+#
+#SBATCH --nodes=1
+#SBATCH --tasks-per-node=1
+#SBATCH --cpus-per-task=1
+#SBATCH --time=4:00:00
+#SBATCH --mem=64GB
+#SBATCH --job-name=q3.3
+
+module load picard/2.17.11
+
+java -jar ${PICARD_JAR} CreateSequenceDictionary \
+        R=Homo_sapiens.GRCh38.dna_sm.primary_assembly.normalized.fa \
+        O=Homo_sapiens.GRCh38.dna_sm.primary_assembly.normalized.dict
+
+
+## generated files from indexing
+
+Homo_sapiens.GRCh38.dna_sm.primary_assembly.normalized.dict    Homo_sapiens.GRCh38.dna_sm.primary_assembly.normalized.fa.bwt  
+Homo_sapiens.GRCh38.dna_sm.primary_assembly.normalized.fa      Homo_sapiens.GRCh38.dna_sm.primary_assembly.normalized.fa.fai  
+Homo_sapiens.GRCh38.dna_sm.primary_assembly.normalized.fa.amb  Homo_sapiens.GRCh38.dna_sm.primary_assembly.normalized.fa.pac  
+Homo_sapiens.GRCh38.dna_sm.primary_assembly.normalized.fa.ann  Homo_sapiens.GRCh38.dna_sm.primary_assembly.normalized.fa.sa   
