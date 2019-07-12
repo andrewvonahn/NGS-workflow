@@ -1,0 +1,18 @@
+#!/bin/bash
+#
+#SBATCH --nodes=1
+#SBATCH --tasks-per-node=1
+#SBATCH --cpus-per-task=8
+#SBATCH --time=24:00:00
+#SBATCH --mem=60GB
+#SBATCH --job-name=q1.1
+
+module load jellyfish/intel/2.2.6
+
+jellyfish count -C -m 21 -s 5G -t 8 SRR1734599_1.fastq -o reads.jf
+
+jellyfish histo -t 8 reads.jf > SRR1734599reads.histo
+
+jellyfish count -C -m 21 -s 5G -t 8 <(zcat Datepalm8_R1_adapter_trim_fP.fastq.gz) -o Datepalmreads.jf
+
+jellyfish histo -t 8 Datepalmreads.jf > Datepalmreads.histo
